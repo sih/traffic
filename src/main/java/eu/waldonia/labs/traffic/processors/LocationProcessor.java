@@ -1,6 +1,3 @@
-/**
- * 
- */
 package eu.waldonia.labs.traffic.processors;
 
 import java.io.File;
@@ -12,15 +9,13 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import eu.waldonia.labs.traffic.domain.CassandraProxy;
 import eu.waldonia.labs.traffic.domain.SingleKeyDomainObject;
 
-/**
- * @author sid
- * 
- */
 /**
  * @author sid
  * 
@@ -28,9 +23,10 @@ import eu.waldonia.labs.traffic.domain.SingleKeyDomainObject;
 public class LocationProcessor {
 
     private String fileLocation;
+    private CassandraProxy proxy;
 
     public LocationProcessor() {
-
+	proxy = new CassandraProxy();
     }
 
     public void setFileLocation(String fileLocation) {
@@ -49,9 +45,51 @@ public class LocationProcessor {
 	XMLEventReader r = null;
 	try {
 	    r = f.createXMLEventReader(new FileInputStream(new File(fileLocation)));
+	    SingleKeyDomainObject row = null;
+	    boolean processingToElement = true;
 	    while (r.hasNext()) {
-		XMLEvent event = r.nextEvent();		
-		SingleKeyDomainObject d = parseEvent(event);
+		XMLEvent event = r.nextEvent();
+		if (event.isStartElement()) {
+		    StartElement s = event.asStartElement();
+		    QName n = s.getName();
+		    if ("predefinedLocation".equals(n.getLocalPart())) {
+			Attribute a = s.getAttributeByName(new QName("id"));
+			// don't do anything for other predefinedLocations only the pk
+			if (a != null) {
+			    row = new SingleKeyDomainObject();
+			    row.setKey(a.getValue());
+			}
+		    }
+		    else if ("to".equals(n.getLocalPart())) {
+			processingToElement = true;
+		    }
+		    else if ("from".equals(n.getLocalPart())) {
+			processingToElement = false;
+		    }		    
+		    else if ("latitude".equals(n.getLocalPart())) {
+			
+		    }
+		    else if ("longitude".equals(n.getLocalPart())) {
+			
+		    }	
+		    else if ("name".equals(n.getLocalPart())) {
+			
+		    }
+		    else if ("tpegDirection".equals(n.getLocalPart())) {
+
+		    }		    
+		}
+		else if (event.isEndElement()) {
+		    EndElement e = event.asEndElement();
+		    QName n = e.getName();
+		    if ("predefinedLocation".equals(n.getLocalPart())) {
+			// store(row);
+		    }
+		    
+		}
+		
+		
+		
 		counter++;
 	    }
 	    time = System.currentTimeMillis() - time;
@@ -77,19 +115,9 @@ public class LocationProcessor {
 	return counter;
     }
 
-    private SingleKeyDomainObject parseEvent(XMLEvent event) {
-	SingleKeyDomainObject row = new SingleKeyDomainObject();
-	if (event.isStartElement()) {
-	    StartElement s = event.asStartElement();
-	    QName n = s.getName();
-	    if ("predefinedLocation".equals(n.getLocalPart())) {
-		Attribute a = s.getAttributeByName(new QName("id"));
-		if (a != null) {
-		    row.setKey(a.getValue());
-		}
-	    }
-	}
-	return row;
+    
+    private void store(SingleKeyDomainObject row) {
+	proxy.executeStatement(row.toCql());
     }
 
 }

@@ -11,9 +11,29 @@ public class SingleKeyDomainObject {
 
     private String key;
     private Map<String,Object> attributes;
-    
+
+    /**
+     * Make sure the attributes map is non-null
+     */
     public SingleKeyDomainObject() {
 	attributes = new HashMap<String,Object>();
+    }
+    
+    /**
+     * @param name The attribute name to add
+     * @param value The attribute value to add
+     */
+    public void addAttribute(String name, Object value) {
+	attributes.put(name, value);
+    }
+    
+    /**
+     * @return A CQL insert statement for this row 
+     */
+    public String toCql() {
+	StringBuffer buffy = new StringBuffer();
+	// TODO Implement me!
+	return buffy.toString();
     }
     
     public String getKey() {

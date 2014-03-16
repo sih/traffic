@@ -1,11 +1,12 @@
 package eu.waldonia.labs.traffic.processors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import eu.waldonia.labs.traffic.processors.LocationProcessor;
 
 public class LocationProcessorTest {
 
@@ -14,7 +15,7 @@ public class LocationProcessorTest {
     @Before
     public void setUp() {
 	parser = new LocationProcessor();
-	parser.setFileLocation("/Users/sid/data/traffic/predefined-location.xml");
+	parser.setFileLocation("./data/test-location.xml");
     }
 
     @Test
