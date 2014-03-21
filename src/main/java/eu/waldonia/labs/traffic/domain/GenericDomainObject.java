@@ -1,6 +1,7 @@
 package eu.waldonia.labs.traffic.domain;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -11,13 +12,24 @@ public class GenericDomainObject {
 
     private Map<String,String> keys;
     private Map<String,Object> attributes;
+    private String tableName;
 
     /**
      * Make sure the attributes map is non-null
      */
     public GenericDomainObject() {
-	attributes = new HashMap<String,Object>();
+	keys = new LinkedHashMap<String,String>();
+	attributes = new LinkedHashMap<String,Object>();
     }
+
+    /**
+     * @param name The key name to add
+     * @param value The key value to add
+     */
+    public void addKey(String name, String value) {
+	keys.put(name, value);
+    }
+
     
     /**
      * @param name The attribute name to add
@@ -30,8 +42,14 @@ public class GenericDomainObject {
     /**
      * @return A CQL insert statement for this row 
      */
-    public String toCql() {
+    public String insert() {
 	StringBuffer buffy = new StringBuffer();
+	buffy.append("INSERT INTO ");
+	buffy.append(tableName);
+	buffy.append(" (");
+	buffy.append(")");
+	
+	
 	// TODO Implement me!
 	return buffy.toString();
     }
@@ -39,15 +57,17 @@ public class GenericDomainObject {
     public Map<String,String> getKeys() {
         return keys;
     }
-    public void setKeys(Map<String,String> keys) {
-        this.keys = keys;
-    }
+    
+    
     public Map<String, Object> getAttributes() {
         return attributes;
     }
-    public void setAttributes(Map<String, Object> attributes) {
-        this.attributes = attributes;
+
+    
+    public void setTableName(String tableName) {
+	this.tableName = tableName;
     }
+    
 
     @Override
     public int hashCode() {

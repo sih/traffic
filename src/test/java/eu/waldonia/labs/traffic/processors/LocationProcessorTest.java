@@ -63,8 +63,7 @@ public class LocationProcessorTest {
 	    parser.process();
 	    GenericDomainObject objectToStore = new GenericDomainObject();
 	    Map<String,String> keys = new HashMap<String,String>();
-	    keys.put("location_id", "Link114001101");
-	    objectToStore.setKeys(keys);
+	    objectToStore.addKey("location_id", "Link114001101");
 	    verify(mockPersister).store(objectToStore);
 	}
 	catch (Exception e) {

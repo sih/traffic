@@ -36,31 +36,37 @@ public class LocationProcessor {
      */
     public int process() {
 	if (null == this.xmlReader)
-	    throw new IllegalStateException(
-		    "You need to supply an XMLReader");
-	int counter = 0;
-	long time = System.currentTimeMillis();
+	    throw new IllegalStateException("You need to supply an XMLReader");
+	int counter = 0;			// row counter
+	long timer = System.currentTimeMillis();// timer
 	try {
-
-	    GenericDomainObject row = null;
-	    boolean processingToElement = true;
+	    
+	    GenericDomainObject row = null;	// will hold the data to persist
+	    boolean processingToElement = true;	// used as a switch for DRY processing
+	    
 	    // loop through each event
 	    while (xmlReader.hasNext()) {
 		XMLEvent event = xmlReader.nextEvent();
+		// pull out start elements and match on the ones we're interested in
 		if (event.isStartElement()) {
 		    StartElement s = event.asStartElement();
 		    QName n = s.getName();
-		    if ("predefinedLocation".equals(n.getLocalPart())) {
+		    
+		    // timestamp for this data extract
+		    if ("publicationTime".equals(n.getLocalPart())) {
+			
+		    }
+		    
+		    // start of a row (as long as this has an id)
+		    else if ("predefinedLocation".equals(n.getLocalPart())) {
 			Attribute a = s.getAttributeByName(new QName("id"));
-			// don't do anything for other predefinedLocations only
-			// the pk
+			// only process outer predefinedLocations as rows ... these will have pk
 			if (a != null) {
 			    row = new GenericDomainObject();
-			    Map<String, String> keys = new HashMap<String, String>();
-			    keys.put("location_id", a.getValue());
-			    row.setKeys(keys);
+			    row.addKey("location_id", a.getValue());
 			}
 		    }
+		    // name of location
 		    else if ("predefinedLocationName".equals(n.getLocalPart())) {
 			while ((event = xmlReader.nextEvent()) != null) {
 			    if (event.isStartElement()) {
@@ -77,6 +83,7 @@ public class LocationProcessor {
 			}
 
 		    }
+		    // direction (NSEW)
 		    else if ("tpeglinearLocation".equals(n.getLocalPart())) {
 			// direction
 			while ((event = xmlReader.nextEvent()) != null) {
@@ -110,10 +117,11 @@ public class LocationProcessor {
 				    .asCharacters().toString().trim());
 			}
 		    }
-
+		    // set switch = TO
 		    else if ("to".equals(n.getLocalPart())) {
 			processingToElement = true;
 		    }
+		    // set switch = FROM
 		    else if ("from".equals(n.getLocalPart())) {
 			processingToElement = false;
 		    }
@@ -143,7 +151,6 @@ public class LocationProcessor {
 			else
 			    row.addAttribute("from_longitude", lng);
 		    }
-
 		    // location type and names of to and from locations
 		    else if ("ilc".equals(n.getLocalPart())) {
 			// location type
@@ -192,13 +199,12 @@ public class LocationProcessor {
 		}
 
 	    }
-	    time = System.currentTimeMillis() - time;
-	    System.out.println("Found " + counter + " locations in " + time
-		    + " ms");
+	    // stop the timer
+	    timer = System.currentTimeMillis() - timer;
+	    System.out.println("Found " +counter+ " locations in " +timer+ " ms");
 
 	}
 	catch (XMLStreamException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} 
 	finally {

@@ -34,12 +34,14 @@ public class CassandraProxy implements LocationPersister {
     }
 
     /**
+     * 
      * @param statement
      */
     public void executeStatement(String statement) {
 	session.execute(statement);
     }
-
+    
+    
     /**
      * 
      * @param query
@@ -61,8 +63,7 @@ public class CassandraProxy implements LocationPersister {
 
     @Override
     public void store(GenericDomainObject objectToStore) {
-	// TODO Auto-generated method stub
-	
+	session.execute(objectToStore.insert());
     }
 
 }

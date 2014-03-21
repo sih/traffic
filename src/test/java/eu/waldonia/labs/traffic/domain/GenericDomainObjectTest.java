@@ -18,7 +18,7 @@ public class GenericDomainObjectTest {
     
     @Test
     public void testNew() {
-	assertNull(domain.getKeys());
+	assertNotNull(domain.getKeys());
 	assertNotNull(domain.getAttributes());
     }
 
