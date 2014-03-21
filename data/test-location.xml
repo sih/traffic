@@ -13,7 +13,8 @@
 		</publicationCreator>
 		<headerInformation>
 			<areaOfInterest>national</areaOfInterest>
-			<confidentiality>restrictedToAuthoritiesTrafficOperatorsAndPublishers</confidentiality>
+			<confidentiality>restrictedToAuthoritiesTrafficOperatorsAndPublishers
+			</confidentiality>
 			<informationUsage>broadcast</informationUsage>
 			<informationStatus>real</informationStatus>
 		</headerInformation>
@@ -23,60 +24,63 @@
 			</predefinedLocationSetName>
 			<predefinedLocation id="Link114001101">
 				<predefinedLocationName>
-					<value lang="en">A50 westbound exit for A515 near Sudbury (west)</value>
+					<value lang="en">A50 westbound exit for A515 near Sudbury (west)
+					</value>
 				</predefinedLocationName>
 				<predefinedLocation>
-					<tpeglinearLocation><tpegDirection>westBound</tpegDirection>
-					<tpegLocationType>segment</tpegLocationType>
-					<to>
-						<pointCoordinates>
-							<latitude>52.892544</latitude>
-							<longitude>-1.775278</longitude>
-						</pointCoordinates>
-						<name>
-							<descriptor>
-								<value lang="en"/>
-							</descriptor>
-							<tpegDescriptorType>junctionName</tpegDescriptorType>
-						</name>
-						<ilc>
-							<descriptor>
-								<value lang="en">A50</value>
-							</descriptor>
-							<tpegDescriptorType>tpegILCName1</tpegDescriptorType>
-						</ilc>
-						<ilc>
-							<descriptor>
-								<value lang="en">A515</value>
-							</descriptor>
-							<tpegDescriptorType>tpegILCName2</tpegDescriptorType>
-						</ilc>
-					</to>
-					<from>
-						<pointCoordinates>
-							<latitude>52.891373</latitude>
-							<longitude>-1.768254</longitude>
-						</pointCoordinates>
-						<name>
-							<descriptor>
-								<value lang="en"/>
-							</descriptor>
-							<tpegDescriptorType>junctionName</tpegDescriptorType>
-						</name>
-						<ilc>
-							<descriptor>
-								<value lang="en">A50</value>
-							</descriptor>
-							<tpegDescriptorType>tpegILCName1</tpegDescriptorType>
-						</ilc>
-						<ilc>
-							<descriptor>
-								<value lang="en">A515</value>
-							</descriptor>
-							<tpegDescriptorType>tpegILCName2</tpegDescriptorType>
-						</ilc>
-					</from>
-				</tpeglinearLocation>
+					<tpeglinearLocation>
+						<tpegDirection>westBound</tpegDirection>
+						<tpegLocationType>segment</tpegLocationType>
+						<to>
+							<pointCoordinates>
+								<latitude>52.892544</latitude>
+								<longitude>-1.775278</longitude>
+							</pointCoordinates>
+							<name>
+								<descriptor>
+									<value lang="en" />
+								</descriptor>
+								<tpegDescriptorType>junctionName</tpegDescriptorType>
+							</name>
+							<ilc>
+								<descriptor>
+									<value lang="en">A50</value>
+								</descriptor>
+								<tpegDescriptorType>tpegILCName1</tpegDescriptorType>
+							</ilc>
+							<ilc>
+								<descriptor>
+									<value lang="en">A515</value>
+								</descriptor>
+								<tpegDescriptorType>tpegILCName2</tpegDescriptorType>
+							</ilc>
+						</to>
+						<from>
+							<pointCoordinates>
+								<latitude>52.891373</latitude>
+								<longitude>-1.768254</longitude>
+							</pointCoordinates>
+							<name>
+								<descriptor>
+									<value lang="en" />
+								</descriptor>
+								<tpegDescriptorType>junctionName</tpegDescriptorType>
+							</name>
+							<ilc>
+								<descriptor>
+									<value lang="en">A50</value>
+								</descriptor>
+								<tpegDescriptorType>tpegILCName1</tpegDescriptorType>
+							</ilc>
+							<ilc>
+								<descriptor>
+									<value lang="en">A515</value>
+								</descriptor>
+								<tpegDescriptorType>tpegILCName2</tpegDescriptorType>
+							</ilc>
+						</from>
+					</tpeglinearLocation>
+				</predefinedLocation>
 			</predefinedLocation>
 		</predefinedLocationSet>
 	</payloadPublication>

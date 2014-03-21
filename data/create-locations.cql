@@ -10,11 +10,9 @@ CREATE TABLE
 	to_longitude text,
 	to_first_loc text,
 	to_second_loc text,
-	to_description text,
 	from_latitude text, 
 	from_longitude text, 
 	from_first_loc text,
 	from_second_loc text,
-	from_description text,
 	primary key (location_id)
 );

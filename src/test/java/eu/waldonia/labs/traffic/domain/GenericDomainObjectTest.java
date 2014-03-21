@@ -7,18 +7,18 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SingleKeyDomainObjectTest {
+public class GenericDomainObjectTest {
 
-    private SingleKeyDomainObject domain;
+    private GenericDomainObject domain;
     
     @Before
     public void setUp() {
-	domain = new SingleKeyDomainObject();
+	domain = new GenericDomainObject();
     }
     
     @Test
     public void testNew() {
-	assertNull(domain.getKey());
+	assertNull(domain.getKeys());
 	assertNotNull(domain.getAttributes());
     }
 

@@ -7,15 +7,15 @@ import java.util.Map;
  * @author waldo
  *
  */
-public class SingleKeyDomainObject {
+public class GenericDomainObject {
 
-    private String key;
+    private Map<String,String> keys;
     private Map<String,Object> attributes;
 
     /**
      * Make sure the attributes map is non-null
      */
-    public SingleKeyDomainObject() {
+    public GenericDomainObject() {
 	attributes = new HashMap<String,Object>();
     }
     
@@ -36,11 +36,11 @@ public class SingleKeyDomainObject {
 	return buffy.toString();
     }
     
-    public String getKey() {
-        return key;
+    public Map<String,String> getKeys() {
+        return keys;
     }
-    public void setKey(String key) {
-        this.key = key;
+    public void setKeys(Map<String,String> keys) {
+        this.keys = keys;
     }
     public Map<String, Object> getAttributes() {
         return attributes;
@@ -48,13 +48,15 @@ public class SingleKeyDomainObject {
     public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
+
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((key == null) ? 0 : key.hashCode());
+	result = prime * result + ((keys == null) ? 0 : keys.hashCode());
 	return result;
     }
+
     @Override
     public boolean equals(Object obj) {
 	if (this == obj)
@@ -63,14 +65,18 @@ public class SingleKeyDomainObject {
 	    return false;
 	if (getClass() != obj.getClass())
 	    return false;
-	SingleKeyDomainObject other = (SingleKeyDomainObject) obj;
-	if (key == null) {
-	    if (other.key != null)
+	GenericDomainObject other = (GenericDomainObject) obj;
+	if (keys == null) {
+	    if (other.keys != null)
 		return false;
-	} else if (!key.equals(other.key))
+	}
+	else if (!keys.equals(other.keys))
 	    return false;
 	return true;
     }
+
+    
+    
     
     
     

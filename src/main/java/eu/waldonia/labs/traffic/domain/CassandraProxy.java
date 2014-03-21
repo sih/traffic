@@ -12,13 +12,15 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
+import eu.waldonia.labs.traffic.processors.LocationPersister;
+
 /**
  * Connect to an manipulate the Cassandra data store
  * 
  * @author waldo
  * 
  */
-public class CassandraProxy {
+public class CassandraProxy implements LocationPersister {
 
     private Session session;
 
@@ -55,6 +57,12 @@ public class CassandraProxy {
 	    results.add(columns);
 	}
 	return results;
+    }
+
+    @Override
+    public void store(GenericDomainObject objectToStore) {
+	// TODO Auto-generated method stub
+	
     }
 
 }
