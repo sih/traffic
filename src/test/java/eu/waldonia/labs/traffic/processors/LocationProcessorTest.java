@@ -26,7 +26,7 @@ import eu.waldonia.labs.traffic.domain.GenericDomainObject;
 public class LocationProcessorTest {
     
     @InjectMocks
-    private LocationProcessor parser;
+    private LocationProcessor processor;
     
     @Mock
     private LocationPersister mockPersister;
@@ -35,18 +35,18 @@ public class LocationProcessorTest {
 
     @Before
     public void setUp() throws Exception {
-	parser = new LocationProcessor();
-	parser.setLocationPersister(mockPersister);
+	processor = new LocationProcessor();
+	processor.setLocationPersister(mockPersister);
 	XMLInputFactory f = XMLInputFactory.newInstance();
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-location.xml")));
-	parser.setReader(reader);
+	processor.setReader(reader);
     }
 
     @Test
-    public void testParseNoReader() {
-	parser.setReader(null);
+    public void testProcessNoReader() {
+	processor.setReader(null);
 	try {
-	    parser.process();
+	    processor.process();
 	    fail("Should have thrown an exception");
 	}
 	catch (IllegalStateException ise) {
@@ -58,11 +58,10 @@ public class LocationProcessorTest {
     }
 
     @Test
-    public void testParse() {
+    public void testProcess() {
 	try {
-	    parser.process();
+	    processor.process();
 	    GenericDomainObject objectToStore = new GenericDomainObject();
-	    Map<String,String> keys = new HashMap<String,String>();
 	    objectToStore.addKey("location_id", "Link114001101");
 	    verify(mockPersister).store(objectToStore);
 	}
@@ -73,11 +72,11 @@ public class LocationProcessorTest {
     }
     
     @Test
-    public void testParseAllAttributes() {
+    public void testProcessAllAttributes() {
 	try {
 	    VerifyDomainObjectPersister checker = new VerifyDomainObjectPersister();
-	    parser.setLocationPersister(checker);
-	    parser.process();
+	    processor.setLocationPersister(checker);
+	    processor.process();
 	}
 	catch (Exception e) {
 	    fail("Should have thrown an exception");
@@ -90,7 +89,7 @@ public class LocationProcessorTest {
 	public void store(GenericDomainObject objectToStore) {
 	    
 	    Map<String,String> keys = new HashMap<String,String>();
-	    keys.put("location_id", "Link114001101");
+	    keys.put("k_location_id", "Link114001101");
 	    assertEquals(keys,objectToStore.getKeys());
 	    
 	    Map<String,Object> attrs = objectToStore.getAttributes();

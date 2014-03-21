@@ -2,7 +2,7 @@ CREATE KEYSPACE IF NOT EXISTS traffic WITH replication = {'class': 'SimpleStrate
 
 CREATE TABLE 
 	traffic.locations (
-	location_id text, 
+	k_location_id text, 
 	name text, 
 	direction text, 
 	location_type text,

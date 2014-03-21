@@ -8,6 +8,7 @@ import java.util.Map;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ColumnDefinitions;
 import com.datastax.driver.core.ColumnDefinitions.Definition;
+import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
@@ -23,7 +24,8 @@ import eu.waldonia.labs.traffic.processors.LocationPersister;
 public class CassandraProxy implements LocationPersister {
 
     private Session session;
-
+    private String tableName;
+    
     public CassandraProxy() {
 	this("localhost");
     }
@@ -47,23 +49,35 @@ public class CassandraProxy implements LocationPersister {
      * @param query
      * @return
      */
-    public List<Map<String, String>> executeQuery(String query) {
-	List<Map<String, String>> results = new ArrayList<Map<String, String>>();
+    public List<GenericDomainObject> executeQuery(String query) {
+	List<GenericDomainObject> results = new ArrayList<GenericDomainObject>();
 	ResultSet rs = session.execute(query);
 	for (Row row : rs) {
+	    GenericDomainObject o = new GenericDomainObject();
 	    ColumnDefinitions colDefs = rs.getColumnDefinitions();
-	    Map<String, String> columns = new LinkedHashMap<String, String>();
 	    for (Definition colDef : colDefs) {
-		columns.put(colDef.getName(), row.getString(colDef.getName()));
+		String colName = colDef.getName();
+		if (colName.startsWith("k_")) {
+		    o.addKey(colName, row.getString(colName));
+		}
+		if (colDef.getType().equals(DataType.text())) {
+		    o.addAttribute(colDef.getName(), row.getString(colName));		    
+		}
+		// TODO support more types
 	    }
-	    results.add(columns);
+	    results.add(o);
 	}
 	return results;
     }
 
     @Override
     public void store(GenericDomainObject objectToStore) {
-	session.execute(objectToStore.insert());
+	objectToStore.setTableName(tableName);
+	session.execute(objectToStore.insertCql());
     }
 
+    public void setTableName(final String tableName) {
+	this.tableName = tableName;
+    }
+    
 }

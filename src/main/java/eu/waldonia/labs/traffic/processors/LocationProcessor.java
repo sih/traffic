@@ -1,8 +1,5 @@
 package eu.waldonia.labs.traffic.processors;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
@@ -54,7 +51,11 @@ public class LocationProcessor {
 		    
 		    // timestamp for this data extract
 		    if ("publicationTime".equals(n.getLocalPart())) {
-			
+			event = xmlReader.nextEvent();
+			if (event.isCharacters()) {
+			    String iso8601 = event.asCharacters().getData();
+			    // TODO use this to store super wide rows
+			}
 		    }
 		    
 		    // start of a row (as long as this has an id)
@@ -78,8 +79,9 @@ public class LocationProcessor {
 			}
 			event = xmlReader.nextEvent();
 			if (event.isCharacters()) {
-			    row.addAttribute("name", event.asCharacters()
-				    .toString().trim());
+			    String name = event.asCharacters().toString().trim();
+			    name = name.replace("'", "");
+			    row.addAttribute("name", name);
 			}
 
 		    }
@@ -191,9 +193,16 @@ public class LocationProcessor {
 		    // predefinedLocation
 		    if (row != null
 			    && "predefinedLocation".equals(n.getLocalPart())) {
-			persister.store(row);
+			
+			try {
+			    persister.store(row);
+			    counter++; // add one to the count    
+			}
+			catch (Exception ce) {
+			    System.out.println(row.insertCql());
+			}
 			row = null; // reset ready for next location
-			counter++; // add one to the count
+			
 		    }
 
 		}
