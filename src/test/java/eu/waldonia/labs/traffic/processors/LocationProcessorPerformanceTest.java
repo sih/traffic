@@ -10,6 +10,7 @@ import javax.xml.stream.XMLInputFactory;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -56,8 +57,8 @@ public class LocationProcessorPerformanceTest {
     /**
      * Test 28000 rows in under 7s (i.e. 4000 rows/sec)
      */
-    @Test
-    public void testParseTiming() {
+    @Ignore
+    public void testParseTimingLarge() {
 	long timer = System.currentTimeMillis();
 	int rows = processor.process();
 	// stop the timer
@@ -70,8 +71,8 @@ public class LocationProcessorPerformanceTest {
     /**
      * Test 28000 rows in under 28s (i.e. 1000 rows/sec)
      */
-    @Test
-    public void testStorageTiming() {
+    @Ignore
+    public void testStorageTimingLarge() {
 	processor.setLocationPersister(proxy);
 	long timer = System.currentTimeMillis();
 	int rows = processor.process();
@@ -81,5 +82,33 @@ public class LocationProcessorPerformanceTest {
 	assertTrue(timer < 28000);
     }    
     
+
+    /**
+     * 
+     */
+    @Test
+    public void testParseTiming() {
+	long timer = System.currentTimeMillis();
+	int rows = processor.process();
+	// stop the timer
+	timer = System.currentTimeMillis() - timer;
+	assertTrue(rows > 800);
+	assertTrue(timer < 1600);
+    }
+
+    
+    /**
+     * 
+     */
+    @Test
+    public void testStorageTiming() {
+	processor.setLocationPersister(proxy);
+	long timer = System.currentTimeMillis();
+	int rows = processor.process();
+	// stop the timer
+	timer = System.currentTimeMillis() - timer;
+	assertTrue(rows > 800);
+	assertTrue(timer < 3200);
+    }    
     
 }

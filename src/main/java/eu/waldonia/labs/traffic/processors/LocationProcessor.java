@@ -81,6 +81,8 @@ public class LocationProcessor {
 			if (event.isCharacters()) {
 			    String name = event.asCharacters().toString().trim();
 			    name = name.replace("'", "");
+			    name = name.replace("\t","");
+			    name = name.replace("\n"," ");
 			    row.addAttribute("name", name);
 			}
 

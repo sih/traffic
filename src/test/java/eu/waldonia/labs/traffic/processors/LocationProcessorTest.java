@@ -62,7 +62,7 @@ public class LocationProcessorTest {
 	try {
 	    processor.process();
 	    GenericDomainObject objectToStore = new GenericDomainObject();
-	    objectToStore.addKey("location_id", "Link114001101");
+	    objectToStore.addKey("k_location_id", "Section11117");
 	    verify(mockPersister).store(objectToStore);
 	}
 	catch (Exception e) {
@@ -89,44 +89,44 @@ public class LocationProcessorTest {
 	public void store(GenericDomainObject objectToStore) {
 	    
 	    Map<String,String> keys = new HashMap<String,String>();
-	    keys.put("k_location_id", "Link114001101");
+	    keys.put("k_location_id", "Section11117");
 	    assertEquals(keys,objectToStore.getKeys());
 	    
 	    Map<String,Object> attrs = objectToStore.getAttributes();
 	    
 	    assertTrue(attrs.containsKey("name"));
-	    assertEquals("A50 westbound exit for A515 near Sudbury (west)", attrs.get("name"));
+	    assertEquals("Journey Time Section for M53 southbound from J2 (A551) to J5 (A41)", attrs.get("name"));
 	    
 	    assertTrue(attrs.containsKey("direction"));
-	    assertEquals("westBound", attrs.get("direction"));
+	    assertEquals("southBound", attrs.get("direction"));
 	    
 	    assertTrue(attrs.containsKey("location_type"));
 	    assertEquals("segment", attrs.get("location_type"));
 	    
 	    assertTrue(attrs.containsKey("to_latitude"));
-	    assertEquals("52.892544", attrs.get("to_latitude"));	    	    
+	    assertEquals("53.303505", attrs.get("to_latitude"));	    	    
 	    
 	    assertTrue(attrs.containsKey("to_longitude"));	    
-	    assertEquals("-1.775278", attrs.get("to_longitude"));	    
+	    assertEquals("-2.964967", attrs.get("to_longitude"));	    
 	    
 	    assertTrue(attrs.containsKey("to_first_loc"));	    
-	    assertEquals("A50", attrs.get("to_first_loc"));	    	    
+	    assertEquals("M53", attrs.get("to_first_loc"));	    	    
 
 	    assertTrue(attrs.containsKey("to_second_loc"));	    
-	    assertEquals("A515", attrs.get("to_second_loc"));	
+	    assertEquals("A41", attrs.get("to_second_loc"));	
 	    	    
 	    
 	    assertTrue(attrs.containsKey("from_latitude"));
-	    assertEquals("52.891373", attrs.get("from_latitude"));	    	    
+	    assertEquals("53.40252", attrs.get("from_latitude"));	    	    
 	    
 	    assertTrue(attrs.containsKey("from_longitude"));	    
-	    assertEquals("-1.768254", attrs.get("from_longitude"));	    
+	    assertEquals("-3.088529", attrs.get("from_longitude"));	    
 	    
 	    assertTrue(attrs.containsKey("from_first_loc"));	    
-	    assertEquals("A50", attrs.get("from_first_loc"));	    	    
+	    assertEquals("M53", attrs.get("from_first_loc"));	    	    
 
 	    assertTrue(attrs.containsKey("from_second_loc"));	    
-	    assertEquals("A515", attrs.get("from_second_loc"));	
+	    assertEquals("A551", attrs.get("from_second_loc"));	
 	    
 	}
 	

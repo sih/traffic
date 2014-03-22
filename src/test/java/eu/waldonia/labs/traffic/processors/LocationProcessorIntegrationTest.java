@@ -76,7 +76,7 @@ public class LocationProcessorIntegrationTest {
 	GenericDomainObject o = results.get(0);
 	String firstKey = o.getKeys().keySet().iterator().next();
 	String firstKeyValue = o.getKeys().get(firstKey);
-	assertEquals("Link114001101",firstKeyValue);
+	assertEquals("Section11117",firstKeyValue);
 	
     }
 }

@@ -1,80 +1,82 @@
-<d2LogicalModel modelBaseVersion="1.0">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<d2LogicalModel xmlns="http://datex2.eu/schema/1_0/1_0"
+	modelBaseVersion="1.0">
 	<exchange>
 		<supplierIdentification>
 			<country>gb</country>
 			<nationalIdentifier>NTCC</nationalIdentifier>
 		</supplierIdentification>
 	</exchange>
-	<payloadPublication>
-		<publicationTime>2014-03-15T04:55:21Z</publicationTime>
+	<payloadPublication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:type="PredefinedLocationsPublication" lang="en">
+		<publicationTime>2014-03-21T11:55:32Z</publicationTime>
 		<publicationCreator>
 			<country>gb</country>
 			<nationalIdentifier>NTCC</nationalIdentifier>
 		</publicationCreator>
 		<headerInformation>
 			<areaOfInterest>national</areaOfInterest>
-			<confidentiality>restrictedToAuthoritiesTrafficOperatorsAndPublishers
-			</confidentiality>
+			<confidentiality>restrictedToAuthoritiesTrafficOperatorsAndPublishers</confidentiality>
 			<informationUsage>broadcast</informationUsage>
 			<informationStatus>real</informationStatus>
 		</headerInformation>
-		<predefinedLocationSet id="GUID-NTCC-Links">
+		<predefinedLocationSet id="GUID-NTCC-JourneyTimeSections">
 			<predefinedLocationSetName>
-				<value lang="en">NTCC Network Links</value>
+				<value lang="en">NTCC Journey Time Sections</value>
 			</predefinedLocationSetName>
-			<predefinedLocation id="Link114001101">
+			<predefinedLocation id="Section11117">
 				<predefinedLocationName>
-					<value lang="en">A50 westbound exit for A515 near Sudbury (west)
-					</value>
+					<value lang="en">Journey Time Section for M53 southbound from J2
+						(A551) to J5 (A41)</value>
 				</predefinedLocationName>
-				<predefinedLocation>
+				<predefinedLocation xsi:type="Linear">
 					<tpeglinearLocation>
-						<tpegDirection>westBound</tpegDirection>
+						<tpegDirection>southBound</tpegDirection>
 						<tpegLocationType>segment</tpegLocationType>
-						<to>
+						<to xsi:type="TPEGJunction">
 							<pointCoordinates>
-								<latitude>52.892544</latitude>
-								<longitude>-1.775278</longitude>
+								<latitude>53.303505</latitude>
+								<longitude>-2.964967</longitude>
 							</pointCoordinates>
 							<name>
 								<descriptor>
-									<value lang="en" />
+									<value lang="en">5</value>
 								</descriptor>
 								<tpegDescriptorType>junctionName</tpegDescriptorType>
 							</name>
 							<ilc>
 								<descriptor>
-									<value lang="en">A50</value>
+									<value lang="en">M53</value>
 								</descriptor>
 								<tpegDescriptorType>tpegILCName1</tpegDescriptorType>
 							</ilc>
 							<ilc>
 								<descriptor>
-									<value lang="en">A515</value>
+									<value lang="en">A41</value>
 								</descriptor>
 								<tpegDescriptorType>tpegILCName2</tpegDescriptorType>
 							</ilc>
 						</to>
-						<from>
+						<from xsi:type="TPEGJunction">
 							<pointCoordinates>
-								<latitude>52.891373</latitude>
-								<longitude>-1.768254</longitude>
+								<latitude>53.40252</latitude>
+								<longitude>-3.088529</longitude>
 							</pointCoordinates>
 							<name>
 								<descriptor>
-									<value lang="en" />
+									<value lang="en">2</value>
 								</descriptor>
 								<tpegDescriptorType>junctionName</tpegDescriptorType>
 							</name>
 							<ilc>
 								<descriptor>
-									<value lang="en">A50</value>
+									<value lang="en">M53</value>
 								</descriptor>
 								<tpegDescriptorType>tpegILCName1</tpegDescriptorType>
 							</ilc>
 							<ilc>
 								<descriptor>
-									<value lang="en">A515</value>
+									<value lang="en">A551</value>
 								</descriptor>
 								<tpegDescriptorType>tpegILCName2</tpegDescriptorType>
 							</ilc>
