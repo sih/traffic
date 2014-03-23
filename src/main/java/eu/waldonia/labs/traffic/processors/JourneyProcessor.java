@@ -2,11 +2,9 @@ package eu.waldonia.labs.traffic.processors;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
@@ -19,7 +17,24 @@ import eu.waldonia.labs.traffic.domain.GenericDomainObject;
  * 
  */
 public class JourneyProcessor extends AbstractProcessor {
+
+    private String journeyTable;
+    private String locationTable;
     
+    
+    
+    public void setJourneyTable(String journeyTable) {
+        this.journeyTable = journeyTable;
+    }
+
+
+
+    public void setLocationTable(String locationTable) {
+        this.locationTable = locationTable;
+    }
+
+
+
     public int process() {
 	int counter = 0;
 	if (null == this.xmlReader)
@@ -56,8 +71,9 @@ public class JourneyProcessor extends AbstractProcessor {
 			if (event.isCharacters()) {
 			    String locationId = event.asCharacters().toString()
 				    .trim();
-			    
+			    persister.setTableName(locationTable);
 			    row = persister.getLocation(locationId);
+			    persister.setTableName(journeyTable);
 			    row.addKey("location_id", locationId);
 			    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime(publicationTimestamp);
 			    row.addKey("publication_ts", c.getTime().getTime());
@@ -114,6 +130,7 @@ public class JourneyProcessor extends AbstractProcessor {
 			    && "elaboratedData".equals(n.getLocalPart())) {
 
 			try {
+			    persister.setTableName(journeyTable);
 			    persister.store(row);
 			    counter++; // add one to the count
 			}

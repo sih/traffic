@@ -7,7 +7,7 @@ import eu.waldonia.labs.traffic.domain.GenericDomainObject;
  * @author waldo
  *
  */
-public interface LocationPersister {
+public interface TrafficPersister {
     
     /**
      * @param objectToStore
@@ -15,5 +15,7 @@ public interface LocationPersister {
     void store(GenericDomainObject objectToStore);
     
     GenericDomainObject getLocation(String locationId);
+    
+    void setTableName(String tableName);
     
 }

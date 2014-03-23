@@ -3,7 +3,6 @@ CREATE KEYSPACE IF NOT EXISTS traffic WITH replication = {'class': 'SimpleStrate
 CREATE TABLE 
 	traffic.locations (
 	k_location_id text, 
-	k_publication_ts timestamp,
 	name text, 
 	direction text, 
 	location_type text,
@@ -15,8 +14,5 @@ CREATE TABLE
 	from_longitude text, 
 	from_first_loc text,
 	from_second_loc text,
-	travel_time decimal,
-	freeflow_time decimal,
-	normal_time decimal,
-	primary key (k_location_id, k_publication_ts)
+	primary key (k_location_id)
 );

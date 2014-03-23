@@ -13,7 +13,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
-import eu.waldonia.labs.traffic.processors.LocationPersister;
+import eu.waldonia.labs.traffic.processors.TrafficPersister;
 
 /**
  * Connect to an manipulate the Cassandra data store
@@ -21,7 +21,7 @@ import eu.waldonia.labs.traffic.processors.LocationPersister;
  * @author waldo
  * 
  */
-public class CassandraProxy implements LocationPersister {
+public class CassandraProxy implements TrafficPersister {
 
     private Session session;
     private String tableName;

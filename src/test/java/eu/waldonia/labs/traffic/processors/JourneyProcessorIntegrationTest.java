@@ -24,7 +24,8 @@ import eu.waldonia.labs.traffic.domain.GenericDomainObject;
 public class JourneyProcessorIntegrationTest {
 
     private JourneyProcessor processor;
-    private CassandraProxy proxy;
+    private CassandraProxy jProxy;
+    private CassandraProxy lProxy;
     
     private XMLEventReader reader;
 
@@ -52,48 +53,66 @@ public class JourneyProcessorIntegrationTest {
     @Before
     public void setUp() throws Exception {
 	
-	proxy = new CassandraProxy();
-	proxy.executeStatement("CREATE KEYSPACE IF NOT EXISTS testks  WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1}");
-	String ddl = "CREATE TABLE testks.test_locations " +
+	jProxy = new CassandraProxy();
+	lProxy = new CassandraProxy();
+	
+	jProxy.executeStatement("CREATE KEYSPACE IF NOT EXISTS testks  WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1}");
+	String ddl = "CREATE TABLE testks.test_journeys " +
 		"(k_location_id text, k_publication_ts timestamp,name text, " +
 		"direction text, location_type text, to_latitude text, " +
 		"to_longitude text," +"to_first_loc text,to_second_loc text," +
 		"from_latitude text, from_longitude text," +"from_first_loc text," +
 		"from_second_loc text,travel_time decimal,freeflow_time decimal," +
 		"normal_time decimal,primary key (k_location_id, k_publication_ts))";
-	proxy.executeStatement(ddl);
-	proxy.setTableName("testks.test_locations");
+	jProxy.executeStatement(ddl);
 
+	ddl = "CREATE TABLE testks.test_locations " +
+		"(k_location_id text, k_publication_ts timestamp, name text, " +
+		"direction text, location_type text, to_latitude text, " +
+		"to_longitude text," +"to_first_loc text,to_second_loc text," +
+		"from_latitude text, from_longitude text," +"from_first_loc text," +
+		"from_second_loc text,primary key (k_location_id))";
+	lProxy.executeStatement(ddl);
+	
+	
 	XMLInputFactory f = XMLInputFactory.newInstance();
 
 	
 	LocationProcessor lProcessor = new LocationProcessor();
-	lProcessor.setLocationPersister(proxy);
+	lProxy.setTableName("testks.test_locations");
+	lProcessor.setLocationPersister(lProxy);
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-location.xml")));
 	lProcessor.setReader(reader);
 	lProcessor.process();
 	
 	
 	processor = new JourneyProcessor();
-	processor.setLocationPersister(proxy);
+	processor.setLocationPersister(jProxy);
+	processor.setLocationTable("testks.test_locations");
+	processor.setJourneyTable("testks.test_journeys");
+	jProxy.setTableName("testks.test_journeys");
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-journey.xml")));
 	processor.setReader(reader);
     }
 
     @After
     public void tearDown() {
-	proxy.executeStatement("DROP TABLE IF EXISTS testks.test_locations");
-	proxy.executeStatement("DROP KEYSPACE IF EXISTS testks");
+	jProxy.executeStatement("DROP TABLE IF EXISTS testks.test_journeys");
+	jProxy.executeStatement("DROP TABLE IF EXISTS testks.test_locations");
+	jProxy.executeStatement("DROP KEYSPACE IF EXISTS testks");
     }
     
     @Test
     public void testProcessRow() {
 	// there will already be a row there
-	List<GenericDomainObject> results = proxy.executeQuery("SELECT * FROM testks.test_locations");
+	List<GenericDomainObject> results = lProxy.executeQuery("SELECT * FROM testks.test_locations");
 	assertTrue(results.size() == 1);
 	
-	results = proxy.executeQuery("SELECT * FROM testks.test_locations");
-	assertTrue(results.size() == 1);
+	results = jProxy.executeQuery("SELECT * FROM testks.test_journeys");
+	assertTrue(results.isEmpty());
+	
+	results = lProxy.executeQuery("SELECT * FROM testks.test_locations");
+	assertTrue(results.size() == 1);	
 	
 	GenericDomainObject o = results.get(0);
 	Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime("2014-03-21T11:55:32Z");
@@ -104,14 +123,14 @@ public class JourneyProcessorIntegrationTest {
 	
 	// now process the journey data
 	processor.process();
-	results = proxy.executeQuery("SELECT * FROM testks.test_locations");
-	assertTrue(results.size() == 2);
+	results = jProxy.executeQuery("SELECT * FROM testks.test_journeys");
+	assertTrue(results.size() == 1);
 	
 	c = javax.xml.bind.DatatypeConverter.parseDateTime("2014-03-22T17:37:57Z");
 	d = c.getTime();
 	
 	
-	results = proxy.executeQuery("SELECT * FROM testks.test_locations WHERE k_location_id = 'Section11117' AND k_publication_ts = "+d.getTime());
+	results = lProxy.executeQuery("SELECT * FROM testks.test_journeys WHERE k_location_id = 'Section11117' AND k_publication_ts = "+d.getTime());
 	assertTrue(results.size() == 1);
 	o = results.get(0);
 	

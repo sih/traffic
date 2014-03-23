@@ -26,14 +26,14 @@ public class LocationProcessor extends AbstractProcessor {
 	
 	if (null == this.xmlReader)
 	    throw new IllegalStateException("You need to supply an XMLReader");
+
 	int counter = 0;			// row counter
 	long timer = System.currentTimeMillis();// timer
 	try {
 	    
 	    GenericDomainObject row = null;	// will hold the data to persist
 	    boolean processingToElement = true;	// used as a switch for DRY processing
-	    
-	    String publicationTimestamp = null;
+	    Long pubTimestamp = null;
 	    
 	    // loop through each event
 	    while (xmlReader.hasNext()) {
@@ -42,29 +42,30 @@ public class LocationProcessor extends AbstractProcessor {
 		if (event.isStartElement()) {
 		    StartElement s = event.asStartElement();
 		    QName n = s.getName();
-		    
-		    // timestamp for this data extract
-		    if ("publicationTime".equals(n.getLocalPart())) {
+		    String nodeName = n.getLocalPart();
+		    // timestamp for this data extract (only process this once)
+		    if (null == pubTimestamp && "publicationTime".equals(nodeName)) {
 			event = xmlReader.nextEvent();
+			// only need to do this one time
 			if (event.isCharacters()) {
-			    publicationTimestamp = event.asCharacters().getData();
-			    // TODO use this to store super wide rows
+			    String publicationTimestamp = event.asCharacters().getData();
+			    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime(publicationTimestamp);
+			    pubTimestamp = c.getTime().getTime();
 			}
 		    }
 		    
 		    // start of a row (as long as this has an id)
-		    else if ("predefinedLocation".equals(n.getLocalPart())) {
+		    else if ("predefinedLocation".equals(nodeName)) {
 			Attribute a = s.getAttributeByName(new QName("id"));
 			// only process outer predefinedLocations as rows ... these will have pk
 			if (a != null) {
 			    row = new GenericDomainObject();
 			    row.addKey("location_id", a.getValue());
-			    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime(publicationTimestamp);
-			    row.addKey("publication_ts", c.getTime().getTime());
+			    row.addKey("publication_ts", pubTimestamp);
 			}
 		    }
 		    // name of location
-		    else if ("predefinedLocationName".equals(n.getLocalPart())) {
+		    else if ("predefinedLocationName".equals(nodeName)) {
 			while ((event = xmlReader.nextEvent()) != null) {
 			    if (event.isStartElement()) {
 				s = event.asStartElement();
@@ -84,13 +85,12 @@ public class LocationProcessor extends AbstractProcessor {
 
 		    }
 		    // direction (NSEW)
-		    else if ("tpeglinearLocation".equals(n.getLocalPart())) {
+		    else if ("tpeglinearLocation".equals(nodeName)) {
 			// direction
 			while ((event = xmlReader.nextEvent()) != null) {
 			    if (event.isStartElement()) {
 				s = event.asStartElement();
-				if ("tpegDirection".equals(s.getName()
-					.getLocalPart())) {
+				if ("tpegDirection".equals(s.getName().getLocalPart())) {
 				    break;
 				}
 			    }
@@ -105,28 +105,26 @@ public class LocationProcessor extends AbstractProcessor {
 			while ((event = xmlReader.nextEvent()) != null) {
 			    if (event.isStartElement()) {
 				s = event.asStartElement();
-				if ("tpegLocationType".equals(s.getName()
-					.getLocalPart())) {
+				if ("tpegLocationType".equals(s.getName().getLocalPart())) {
 				    break;
 				}
 			    }
 			}
 			event = xmlReader.nextEvent();
 			if (event.isCharacters()) {
-			    row.addAttribute("location_type", event
-				    .asCharacters().toString().trim());
+			    row.addAttribute("location_type", event.asCharacters().toString().trim());
 			}
 		    }
 		    // set switch = TO
-		    else if ("to".equals(n.getLocalPart())) {
+		    else if ("to".equals(nodeName)) {
 			processingToElement = true;
 		    }
 		    // set switch = FROM
-		    else if ("from".equals(n.getLocalPart())) {
+		    else if ("from".equals(nodeName)) {
 			processingToElement = false;
 		    }
 		    // latitude (will process both to and from location)
-		    else if ("latitude".equals(n.getLocalPart())) {
+		    else if ("latitude".equals(nodeName)) {
 			String lat = null;
 			// next event will be the string value of the lat
 			event = xmlReader.nextEvent();
@@ -139,7 +137,7 @@ public class LocationProcessor extends AbstractProcessor {
 			    row.addAttribute("from_latitude", lat);
 		    }
 		    // longitude (will process both to and from location)
-		    else if ("longitude".equals(n.getLocalPart())) {
+		    else if ("longitude".equals(nodeName)) {
 			String lng = null;
 			// next event will be the string value of the lat
 			event = xmlReader.nextEvent();
@@ -152,7 +150,7 @@ public class LocationProcessor extends AbstractProcessor {
 			    row.addAttribute("from_longitude", lng);
 		    }
 		    // location type and names of to and from locations
-		    else if ("ilc".equals(n.getLocalPart())) {
+		    else if ("ilc".equals(nodeName)) {
 			// location type
 			while ((event = xmlReader.nextEvent()) != null) {
 			    if (event.isStartElement()) {
@@ -172,8 +170,7 @@ public class LocationProcessor extends AbstractProcessor {
 				prefix = "to_";
 			    else
 				prefix = "from_";
-			    if (row.getAttributes().containsKey(
-				    prefix + "first_loc")) {
+			    if (row.getAttributes().containsKey(prefix + "first_loc")) {
 				row.addAttribute(prefix + "second_loc", value);
 			    }
 			    else {
@@ -189,8 +186,7 @@ public class LocationProcessor extends AbstractProcessor {
 		    QName n = e.getName();
 		    // check we have a valid row and not just a furniture
 		    // predefinedLocation
-		    if (row != null
-			    && "predefinedLocation".equals(n.getLocalPart())) {
+		    if (row != null && "predefinedLocation".equals(n.getLocalPart())) {
 			
 			try {
 			    persister.store(row);
@@ -200,7 +196,6 @@ public class LocationProcessor extends AbstractProcessor {
 			    System.out.println(row.insertCql());
 			}
 			row = null; // reset ready for next location
-			
 		    }
 
 		}

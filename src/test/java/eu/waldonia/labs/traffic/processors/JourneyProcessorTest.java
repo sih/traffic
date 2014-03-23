@@ -30,7 +30,7 @@ public class JourneyProcessorTest {
     private JourneyProcessor processor;
     
     @Mock
-    private LocationPersister mockPersister;
+    private TrafficPersister mockPersister;
     
     private XMLEventReader reader;
 
@@ -90,7 +90,7 @@ public class JourneyProcessorTest {
 	}	
     }
     
-    class VerifyDomainObjectPersister implements LocationPersister {
+    class VerifyDomainObjectPersister implements TrafficPersister {
 
 	@Override
 	public void store(GenericDomainObject objectToStore) {
@@ -121,6 +121,12 @@ public class JourneyProcessorTest {
 	    o.addKey("k_location_id", locationId);
 	    o.addKey("publication_ts", "2014-03-22T17:37:57Z");
 	    return o;
+	}
+
+	@Override
+	public void setTableName(String tableName) {
+	    // TODO Auto-generated method stub
+	    
 	}
 	
     }

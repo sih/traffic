@@ -30,7 +30,7 @@ public class LocationProcessorTest {
     private LocationProcessor processor;
     
     @Mock
-    private LocationPersister mockPersister;
+    private TrafficPersister mockPersister;
     
     private XMLEventReader reader;
 
@@ -87,7 +87,7 @@ public class LocationProcessorTest {
 	}	
     }
     
-    class VerifyDomainObjectPersister implements LocationPersister {
+    class VerifyDomainObjectPersister implements TrafficPersister {
 
 	@Override
 	public void store(GenericDomainObject objectToStore) {
@@ -140,6 +140,12 @@ public class LocationProcessorTest {
 	public GenericDomainObject getLocation(String locationId) {
 	    // TODO Auto-generated method stub
 	    return null;
+	}
+
+	@Override
+	public void setTableName(String tableName) {
+	    // TODO Auto-generated method stub
+	    
 	}
 	
     }

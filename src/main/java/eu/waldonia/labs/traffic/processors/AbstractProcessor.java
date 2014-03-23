@@ -10,11 +10,12 @@ import javax.xml.stream.XMLEventReader;
 public abstract class AbstractProcessor {
 
     protected XMLEventReader xmlReader;
-    protected LocationPersister persister;
+    protected TrafficPersister persister;
+    protected String tableName;
 
     public abstract int process();
     
-    public void setLocationPersister(LocationPersister persister) {
+    public void setLocationPersister(TrafficPersister persister) {
 	this.persister = persister;
     }
 
@@ -22,4 +23,8 @@ public abstract class AbstractProcessor {
 	this.xmlReader = reader;
     }
 
+    public void setTableName(String tableName) {
+	this.tableName = tableName;
+    }
+    
 }
