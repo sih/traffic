@@ -1,5 +1,6 @@
 package eu.waldonia.labs.traffic.domain;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ import java.util.Map;
  */
 public class GenericDomainObject {
 
-    private Map<String, String> keys;
+    private Map<String, Object> keys;
     private Map<String, Object> attributes;
     private String tableName;
 
@@ -29,7 +30,7 @@ public class GenericDomainObject {
      * Make sure the attributes map is non-null
      */
     public GenericDomainObject() {
-	keys = new LinkedHashMap<String, String>();
+	keys = new LinkedHashMap<String, Object>();
 	attributes = new LinkedHashMap<String, Object>();
     }
 
@@ -37,7 +38,7 @@ public class GenericDomainObject {
      * @param name The key name to add
      * @param value The key value to add
      */
-    public void addKey(String name, String value) {
+    public void addKey(String name, Object value) {
 	if (!name.startsWith("k_")) 
 	    name = "k_"+name;
 	keys.put(name, value);
@@ -71,9 +72,15 @@ public class GenericDomainObject {
 	buffy.append(") ");
 	buffy.append("VALUES (");
 	for (String keyName : keys.keySet()) {
-	    buffy.append("'");
-	    buffy.append(keys.get(keyName));
-	    buffy.append("'");
+	    Object o = keys.get(keyName);
+	    if (o instanceof String) {
+		    buffy.append("'");
+		    buffy.append(o);
+		    buffy.append("'");
+	    }
+	    else {
+		buffy.append(o.toString());
+	    }
 	    buffy.append(",");
 	}
 	buffy.deleteCharAt(buffy.length()-1);	// get rid of unnecessary comma
@@ -85,6 +92,9 @@ public class GenericDomainObject {
 		buffy.append(o.toString());
 		buffy.append("'");	
 	    }
+	    else if (o instanceof BigDecimal) {
+		buffy.append(o.toString());
+	    }
 
 	}
 	
@@ -93,7 +103,7 @@ public class GenericDomainObject {
 	return buffy.toString();
     }
 
-    public Map<String, String> getKeys() {
+    public Map<String, Object> getKeys() {
 	return keys;
     }
 

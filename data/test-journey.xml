@@ -1,0 +1,47 @@
+<d2LogicalModel xmlns="http://datex2.eu/schema/1_0/1_0"
+	modelBaseVersion="1.0">
+	<exchange>
+		<supplierIdentification>
+			<country>gb</country>
+			<nationalIdentifier>NTCC</nationalIdentifier>
+		</supplierIdentification>
+	</exchange>
+	<payloadPublication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:type="ElaboratedDataPublication" lang="en">
+		<publicationTime>2014-03-22T17:37:57Z</publicationTime>
+		<publicationCreator>
+			<country>gb</country>
+			<nationalIdentifier>NTCC</nationalIdentifier>
+		</publicationCreator>
+		<periodDefault>300.0</periodDefault>
+		<headerInformation>
+			<areaOfInterest>national</areaOfInterest>
+			<confidentiality>
+				restrictedToAuthoritiesTrafficOperatorsAndPublishers
+			</confidentiality>
+			<informationUsage>broadcast</informationUsage>
+			<informationStatus>real</informationStatus>
+		</headerInformation>
+		<elaboratedData id="GUID-308449-11117">
+			<sourceInformation>
+				<sourceCountry>gb</sourceCountry>
+				<sourceIdentification>11117</sourceIdentification>
+				<sourceName>
+					<value lang="en">NTCC</value>
+				</sourceName>
+			</sourceInformation>
+			<basicDataValue xsi:type="TravelTimeValue">
+				<time>2014-03-22T17:30:00Z</time>
+				<affectedLocation>
+					<locationContainedInGroup xsi:type="LocationByReference">
+						<predefinedLocationReference>Section11117
+						</predefinedLocationReference>
+					</locationContainedInGroup>
+				</affectedLocation>
+				<travelTime>79.0</travelTime>
+				<freeFlowTravelTime>83.0</freeFlowTravelTime>
+				<normallyExpectedTravelTime>83.0</normallyExpectedTravelTime>
+			</basicDataValue>
+		</elaboratedData>
+	</payloadPublication>
+</d2LogicalModel>

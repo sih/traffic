@@ -58,10 +58,19 @@ public class CassandraProxy implements LocationPersister {
 	    for (Definition colDef : colDefs) {
 		String colName = colDef.getName();
 		if (colName.startsWith("k_")) {
-		    o.addKey(colName, row.getString(colName));
+		    if (colDef.getType().equals(DataType.varchar())) {
+			o.addKey(colName, row.getString(colName));			
+		    }
+		    else if (colDef.getType().equals(DataType.timestamp())) {
+			o.addKey(colName, row.getDate(colName));		
+		    }
+
 		}
 		if (colDef.getType().equals(DataType.text())) {
 		    o.addAttribute(colDef.getName(), row.getString(colName));		    
+		}
+		else if (colDef.getType().equals(DataType.decimal())) {
+		    o.addAttribute(colDef.getName(), row.getDecimal(colName));		    
 		}
 		// TODO support more types
 	    }
@@ -78,6 +87,15 @@ public class CassandraProxy implements LocationPersister {
 
     public void setTableName(final String tableName) {
 	this.tableName = tableName;
+    }
+
+    @Override
+    public GenericDomainObject getLocation(String locationId) {
+	
+	String cql = "SELECT * FROM "+tableName+" WHERE k_location_id = '"+locationId+"' LIMIT 1";
+	List<GenericDomainObject> results = this.executeQuery(cql);
+	return results.get(0);
+	
     }
     
 }

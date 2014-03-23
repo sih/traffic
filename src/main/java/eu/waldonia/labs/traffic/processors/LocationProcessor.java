@@ -1,7 +1,8 @@
 package eu.waldonia.labs.traffic.processors;
 
+import java.util.Calendar;
+
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
@@ -11,27 +12,18 @@ import javax.xml.stream.events.XMLEvent;
 import eu.waldonia.labs.traffic.domain.GenericDomainObject;
 
 /**
- * @author sid
+ * @author waldo
  * 
  */
-public class LocationProcessor {
+public class LocationProcessor extends AbstractProcessor {
 
-    private XMLEventReader xmlReader;
-    private LocationPersister persister;
-
-    public void setLocationPersister(LocationPersister persister) {
-	this.persister = persister;
-    }
-
-    public void setReader(XMLEventReader reader) {
-	this.xmlReader = reader;
-    }
 
     /**
      * This loops through event in the XML stream 
      * @return The number of traffic location rows found and stored
      */
     public int process() {
+	
 	if (null == this.xmlReader)
 	    throw new IllegalStateException("You need to supply an XMLReader");
 	int counter = 0;			// row counter
@@ -40,6 +32,8 @@ public class LocationProcessor {
 	    
 	    GenericDomainObject row = null;	// will hold the data to persist
 	    boolean processingToElement = true;	// used as a switch for DRY processing
+	    
+	    String publicationTimestamp = null;
 	    
 	    // loop through each event
 	    while (xmlReader.hasNext()) {
@@ -53,7 +47,7 @@ public class LocationProcessor {
 		    if ("publicationTime".equals(n.getLocalPart())) {
 			event = xmlReader.nextEvent();
 			if (event.isCharacters()) {
-			    String iso8601 = event.asCharacters().getData();
+			    publicationTimestamp = event.asCharacters().getData();
 			    // TODO use this to store super wide rows
 			}
 		    }
@@ -65,6 +59,8 @@ public class LocationProcessor {
 			if (a != null) {
 			    row = new GenericDomainObject();
 			    row.addKey("location_id", a.getValue());
+			    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime(publicationTimestamp);
+			    row.addKey("publication_ts", c.getTime().getTime());
 			}
 		    }
 		    // name of location

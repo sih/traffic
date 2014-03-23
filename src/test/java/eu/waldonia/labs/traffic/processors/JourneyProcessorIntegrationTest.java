@@ -1,10 +1,12 @@
 package eu.waldonia.labs.traffic.processors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19,9 +21,9 @@ import org.junit.Test;
 import eu.waldonia.labs.traffic.domain.CassandraProxy;
 import eu.waldonia.labs.traffic.domain.GenericDomainObject;
 
-public class LocationProcessorIntegrationTest {
+public class JourneyProcessorIntegrationTest {
 
-    private LocationProcessor processor;
+    private JourneyProcessor processor;
     private CassandraProxy proxy;
     
     private XMLEventReader reader;
@@ -30,6 +32,7 @@ public class LocationProcessorIntegrationTest {
     /*
      * 	Test table structure
      * 	k_location_id text, 
+     * 	k_publication_ts timestamp,
      *  name text, 
      *	direction text, 
      *	location_type text,
@@ -41,11 +44,13 @@ public class LocationProcessorIntegrationTest {
      *	from_longitude text, 
      *	from_first_loc text,
      *	from_second_loc text,
-     *	primary key (location_id)
+     *	travel_time decimal,
+     *	freeflow_time decimal,
+     *	actual_time decimal,
+     *	primary key (k_location_id, k_publication_ts)
      */
     @Before
     public void setUp() throws Exception {
-	processor = new LocationProcessor();
 	
 	proxy = new CassandraProxy();
 	proxy.executeStatement("CREATE KEYSPACE IF NOT EXISTS testks  WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1}");
@@ -58,11 +63,20 @@ public class LocationProcessorIntegrationTest {
 		"normal_time decimal,primary key (k_location_id, k_publication_ts))";
 	proxy.executeStatement(ddl);
 	proxy.setTableName("testks.test_locations");
-	
-	processor.setLocationPersister(proxy);
+
 	XMLInputFactory f = XMLInputFactory.newInstance();
+
 	
+	LocationProcessor lProcessor = new LocationProcessor();
+	lProcessor.setLocationPersister(proxy);
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-location.xml")));
+	lProcessor.setReader(reader);
+	lProcessor.process();
+	
+	
+	processor = new JourneyProcessor();
+	processor.setLocationPersister(proxy);
+	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-journey.xml")));
 	processor.setReader(reader);
     }
 
@@ -74,24 +88,39 @@ public class LocationProcessorIntegrationTest {
     
     @Test
     public void testProcessRow() {
+	// there will already be a row there
 	List<GenericDomainObject> results = proxy.executeQuery("SELECT * FROM testks.test_locations");
-	assertTrue(results.isEmpty());
-	int rowcount = processor.process();
-	assertEquals(1,rowcount);
+	assertTrue(results.size() == 1);
+	
 	results = proxy.executeQuery("SELECT * FROM testks.test_locations");
 	assertTrue(results.size() == 1);
 	
 	GenericDomainObject o = results.get(0);
-	
 	Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime("2014-03-21T11:55:32Z");
 	Date d = c.getTime();
 	
 	assertEquals("Section11117",o.getKeys().get("k_location_id"));
-	assertEquals(d,o.getKeys().get("k_publication_ts"));
+	assertNull(o.getAttributes().get("travel_time"));
 	
-	String firstKey = o.getKeys().keySet().iterator().next();
-	Object firstKeyValue = o.getKeys().get(firstKey);
-	assertEquals("Section11117",firstKeyValue);
+	// now process the journey data
+	processor.process();
+	results = proxy.executeQuery("SELECT * FROM testks.test_locations");
+	assertTrue(results.size() == 2);
+	
+	c = javax.xml.bind.DatatypeConverter.parseDateTime("2014-03-22T17:37:57Z");
+	d = c.getTime();
+	
+	
+	results = proxy.executeQuery("SELECT * FROM testks.test_locations WHERE k_location_id = 'Section11117' AND k_publication_ts = "+d.getTime());
+	assertTrue(results.size() == 1);
+	o = results.get(0);
+	
+	assertTrue(o.getAttributes().containsKey("travel_time"));
+	assertEquals(new BigDecimal("79.0"), o.getAttributes().get("travel_time"));
+	assertTrue(o.getAttributes().containsKey("freeflow_time"));
+	assertEquals(new BigDecimal("83.0"), o.getAttributes().get("freeflow_time"));	
+	assertTrue(o.getAttributes().containsKey("normal_time"));
+	assertEquals(new BigDecimal("83.0"), o.getAttributes().get("normal_time"));
 	
     }
 }

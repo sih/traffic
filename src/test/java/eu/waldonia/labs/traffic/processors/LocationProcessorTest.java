@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,9 +61,12 @@ public class LocationProcessorTest {
     @Test
     public void testProcess() {
 	try {
-	    processor.process();
 	    GenericDomainObject objectToStore = new GenericDomainObject();
 	    objectToStore.addKey("k_location_id", "Section11117");
+	    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime("2014-03-21T11:55:32Z");
+	    objectToStore.addKey("k_publication_ts", c.getTime().getTime());	    
+	    
+	    processor.process();
 	    verify(mockPersister).store(objectToStore);
 	}
 	catch (Exception e) {
@@ -88,8 +92,10 @@ public class LocationProcessorTest {
 	@Override
 	public void store(GenericDomainObject objectToStore) {
 	    
-	    Map<String,String> keys = new HashMap<String,String>();
+	    Map<String,Object> keys = new HashMap<String,Object>();
 	    keys.put("k_location_id", "Section11117");
+	    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime("2014-03-21T11:55:32Z");
+	    keys.put("k_publication_ts", c.getTime().getTime());
 	    assertEquals(keys,objectToStore.getKeys());
 	    
 	    Map<String,Object> attrs = objectToStore.getAttributes();
@@ -128,6 +134,12 @@ public class LocationProcessorTest {
 	    assertTrue(attrs.containsKey("from_second_loc"));	    
 	    assertEquals("A551", attrs.get("from_second_loc"));	
 	    
+	}
+
+	@Override
+	public GenericDomainObject getLocation(String locationId) {
+	    // TODO Auto-generated method stub
+	    return null;
 	}
 	
     }

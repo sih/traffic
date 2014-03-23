@@ -13,4 +13,7 @@ public interface LocationPersister {
      * @param objectToStore
      */
     void store(GenericDomainObject objectToStore);
+    
+    GenericDomainObject getLocation(String locationId);
+    
 }
