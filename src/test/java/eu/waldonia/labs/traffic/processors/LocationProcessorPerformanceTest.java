@@ -33,13 +33,8 @@ public class LocationProcessorPerformanceTest {
 
     @Before
     public void setUp() throws Exception {
-	processor = new LocationProcessor();
-	
-	processor.setLocationPersister(mockPersister);
-	
 	XMLInputFactory f = XMLInputFactory.newInstance();
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/predefined-location.xml")));
-	processor.setReader(reader);
 	
 	proxy = new CassandraProxy();
 	proxy.executeStatement("CREATE KEYSPACE IF NOT EXISTS testks  WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1}");
@@ -50,7 +45,9 @@ public class LocationProcessorPerformanceTest {
 		"from_latitude text, from_longitude text," +"from_first_loc text," +
 		"from_second_loc text,primary key (k_location_id))";
 	proxy.executeStatement(ddl);
-	proxy.setTableName("testks.test_locations");
+	processor = new LocationProcessor();
+	processor.setTableName("testks.test_locations");
+	processor.setReader(reader);
 	
     }
 
@@ -79,7 +76,7 @@ public class LocationProcessorPerformanceTest {
      */
     @Ignore
     public void testStorageTimingLarge() {
-	processor.setLocationPersister(proxy);
+	processor.setTrafficPersister(proxy);
 	long timer = System.currentTimeMillis();
 	int rows = processor.process();
 	// stop the timer
@@ -99,7 +96,7 @@ public class LocationProcessorPerformanceTest {
 	// stop the timer
 	timer = System.currentTimeMillis() - timer;
 	assertTrue(rows > 800);
-	assertTrue(timer < 1600);
+	assertTrue(timer < 2500);
     }
 
     
@@ -108,13 +105,13 @@ public class LocationProcessorPerformanceTest {
      */
     @Test
     public void testStorageTiming() {
-	processor.setLocationPersister(proxy);
+	processor.setTrafficPersister(proxy);
 	long timer = System.currentTimeMillis();
 	int rows = processor.process();
 	// stop the timer
 	timer = System.currentTimeMillis() - timer;
 	assertTrue(rows > 800);
-	assertTrue(timer < 3200);
+	assertTrue(timer < 3500);
     }    
     
 }

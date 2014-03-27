@@ -79,18 +79,15 @@ public class JourneyProcessorIntegrationTest {
 
 	
 	LocationProcessor lProcessor = new LocationProcessor();
-	lProxy.setTableName("testks.test_locations");
-	lProcessor.setLocationPersister(lProxy);
+	lProcessor.setTableName("testks.test_locations");
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-location.xml")));
 	lProcessor.setReader(reader);
 	lProcessor.process();
 	
 	
 	processor = new JourneyProcessor();
-	processor.setLocationPersister(jProxy);
 	processor.setLocationTable("testks.test_locations");
 	processor.setJourneyTable("testks.test_journeys");
-	jProxy.setTableName("testks.test_journeys");
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-journey.xml")));
 	processor.setReader(reader);
     }

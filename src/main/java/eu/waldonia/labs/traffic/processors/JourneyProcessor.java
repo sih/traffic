@@ -36,6 +36,12 @@ public class JourneyProcessor extends AbstractProcessor {
 
 
     public int process() {
+	
+	if (null == this.persister) {
+	    this.setTrafficPersister(new CassandraProxy());
+	}
+	persister.setTableName(this.tableName);
+	
 	int counter = 0;
 	if (null == this.xmlReader)
 	    throw new IllegalStateException("You need to supply an XMLReader");

@@ -37,7 +37,7 @@ public class LocationProcessorTest {
     @Before
     public void setUp() throws Exception {
 	processor = new LocationProcessor();
-	processor.setLocationPersister(mockPersister);
+	processor.setTrafficPersister(mockPersister);
 	XMLInputFactory f = XMLInputFactory.newInstance();
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-location.xml")));
 	processor.setReader(reader);
@@ -79,7 +79,7 @@ public class LocationProcessorTest {
     public void testProcessAllAttributes() {
 	try {
 	    VerifyDomainObjectPersister checker = new VerifyDomainObjectPersister();
-	    processor.setLocationPersister(checker);
+	    processor.setTrafficPersister(checker);
 	    processor.process();
 	}
 	catch (Exception e) {

@@ -58,11 +58,11 @@ public class LocationProcessorIntegrationTest {
 	proxy.executeStatement(ddl);
 	proxy.setTableName("testks.test_locations");
 	
-	processor.setLocationPersister(proxy);
 	XMLInputFactory f = XMLInputFactory.newInstance();
 	
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-location.xml")));
 	processor.setReader(reader);
+	processor.setTableName("testks.test_locations");
     }
 
     @After

@@ -9,6 +9,7 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import eu.waldonia.labs.traffic.domain.CassandraProxy;
 import eu.waldonia.labs.traffic.domain.GenericDomainObject;
 
 /**
@@ -16,13 +17,18 @@ import eu.waldonia.labs.traffic.domain.GenericDomainObject;
  * 
  */
 public class LocationProcessor extends AbstractProcessor {
-
-
+    
+    
     /**
      * This loops through event in the XML stream 
      * @return The number of traffic location rows found and stored
      */
     public int process() {
+
+	if (null == this.persister) {
+	    this.setTrafficPersister(new CassandraProxy());
+	}
+	persister.setTableName(this.tableName);
 	
 	if (null == this.xmlReader)
 	    throw new IllegalStateException("You need to supply an XMLReader");

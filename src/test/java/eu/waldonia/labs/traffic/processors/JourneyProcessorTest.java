@@ -37,7 +37,7 @@ public class JourneyProcessorTest {
     @Before
     public void setUp() throws Exception {
 	processor = new JourneyProcessor();
-	processor.setLocationPersister(mockPersister);
+	processor.setTrafficPersister(mockPersister);
 	XMLInputFactory f = XMLInputFactory.newInstance();
 	reader = f.createXMLEventReader(new FileInputStream(new File("./data/test-journey.xml")));
 	processor.setReader(reader);
@@ -81,7 +81,7 @@ public class JourneyProcessorTest {
     public void testProcessAllAttributes() {
 	try {
 	    VerifyDomainObjectPersister checker = new VerifyDomainObjectPersister();
-	    processor.setLocationPersister(checker);
+	    processor.setTrafficPersister(checker);
 	    processor.process();
 	}
 	catch (Exception e) {

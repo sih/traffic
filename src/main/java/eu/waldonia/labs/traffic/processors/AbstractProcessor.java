@@ -15,7 +15,7 @@ public abstract class AbstractProcessor {
 
     public abstract int process();
     
-    public void setLocationPersister(TrafficPersister persister) {
+    protected void setTrafficPersister(TrafficPersister persister) {
 	this.persister = persister;
     }
 
