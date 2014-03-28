@@ -66,11 +66,16 @@ public class CassandraProxy implements TrafficPersister {
 		    }
 
 		}
-		if (colDef.getType().equals(DataType.text())) {
-		    o.addAttribute(colDef.getName(), row.getString(colName));		    
-		}
-		else if (colDef.getType().equals(DataType.decimal())) {
-		    o.addAttribute(colDef.getName(), row.getDecimal(colName));		    
+		else {
+		    if (colDef.getType().equals(DataType.varchar())) {
+			o.addAttribute(colDef.getName(), row.getString(colName));
+		    }
+		    else if (colDef.getType().equals(DataType.decimal())) {
+			o.addAttribute(colDef.getName(),row.getDecimal(colName));
+		    }
+		    else if (colDef.getType().equals(DataType.timestamp())) {
+			o.addAttribute(colName, row.getDate(colName));		
+		    }
 		}
 		// TODO support more types
 	    }

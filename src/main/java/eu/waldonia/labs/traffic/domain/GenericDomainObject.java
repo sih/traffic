@@ -95,11 +95,18 @@ public class GenericDomainObject {
 	    else if (o instanceof BigDecimal) {
 		buffy.append(o.toString());
 	    }
+	    else if (o instanceof Long) {
+		buffy.append(o.toString());
+	    }
+	    else {
+		buffy.append("''");
+	    }
+	    
+	    
 
 	}
 	
 	buffy.append(")");
-
 	return buffy.toString();
     }
 

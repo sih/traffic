@@ -67,7 +67,7 @@ public class JourneyProcessorIntegrationTest {
 	jProxy.executeStatement(ddl);
 
 	ddl = "CREATE TABLE testks.test_locations " +
-		"(k_location_id text, k_publication_ts timestamp, name text, " +
+		"(k_location_id text, publication_ts timestamp, name text, " +
 		"direction text, location_type text, to_latitude text, " +
 		"to_longitude text," +"to_first_loc text,to_second_loc text," +
 		"from_latitude text, from_longitude text," +"from_first_loc text," +

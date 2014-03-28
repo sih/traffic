@@ -67,7 +67,7 @@ public class LocationProcessor extends AbstractProcessor {
 			if (a != null) {
 			    row = new GenericDomainObject();
 			    row.addKey("location_id", a.getValue());
-			    row.addKey("publication_ts", pubTimestamp);
+			    row.addAttribute("publication_ts", pubTimestamp);
 			}
 		    }
 		    // name of location
@@ -209,7 +209,7 @@ public class LocationProcessor extends AbstractProcessor {
 	    }
 	    // stop the timer
 	    timer = System.currentTimeMillis() - timer;
-	    System.out.println("Found " +counter+ " locations in " +timer+ " ms");
+	    System.out.println("Processed " +counter+ " locations in " +timer+ " ms");
 
 	}
 	catch (XMLStreamException e) {

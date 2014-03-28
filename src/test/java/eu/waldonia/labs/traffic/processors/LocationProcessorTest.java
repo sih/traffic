@@ -63,8 +63,6 @@ public class LocationProcessorTest {
 	try {
 	    GenericDomainObject objectToStore = new GenericDomainObject();
 	    objectToStore.addKey("k_location_id", "Section11117");
-	    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime("2014-03-21T11:55:32Z");
-	    objectToStore.addKey("k_publication_ts", c.getTime().getTime());	    
 	    
 	    processor.process();
 	    verify(mockPersister).store(objectToStore);
@@ -94,9 +92,6 @@ public class LocationProcessorTest {
 	    
 	    Map<String,Object> keys = new HashMap<String,Object>();
 	    keys.put("k_location_id", "Section11117");
-	    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime("2014-03-21T11:55:32Z");
-	    keys.put("k_publication_ts", c.getTime().getTime());
-	    assertEquals(keys,objectToStore.getKeys());
 	    
 	    Map<String,Object> attrs = objectToStore.getAttributes();
 	    
@@ -105,6 +100,11 @@ public class LocationProcessorTest {
 	    
 	    assertTrue(attrs.containsKey("direction"));
 	    assertEquals("southBound", attrs.get("direction"));
+
+	    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime("2014-03-21T11:55:32Z");
+	    assertTrue(attrs.containsKey("publication_ts"));
+	    assertEquals(c.getTime().getTime(),attrs.get("publication_ts"));
+	    
 	    
 	    assertTrue(attrs.containsKey("location_type"));
 	    assertEquals("segment", attrs.get("location_type"));

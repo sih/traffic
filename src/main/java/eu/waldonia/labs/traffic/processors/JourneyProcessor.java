@@ -79,6 +79,7 @@ public class JourneyProcessor extends AbstractProcessor {
 				    .trim();
 			    persister.setTableName(locationTable);
 			    row = persister.getLocation(locationId);
+			    row.getAttributes().remove("publication_ts"); // not interested in location ts
 			    persister.setTableName(journeyTable);
 			    row.addKey("location_id", locationId);
 			    Calendar c = javax.xml.bind.DatatypeConverter.parseDateTime(publicationTimestamp);
@@ -152,7 +153,7 @@ public class JourneyProcessor extends AbstractProcessor {
 	    }
 	    // stop the timer
 	    timer = System.currentTimeMillis() - timer;
-	    System.out.println("Found " + counter + " locations in " + timer
+	    System.out.println("Processed " + counter + " locations in " + timer
 		    + " ms");
 
 	}
