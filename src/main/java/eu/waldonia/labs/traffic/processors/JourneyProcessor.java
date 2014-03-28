@@ -159,7 +159,8 @@ public class JourneyProcessor extends AbstractProcessor {
 	}
 	catch (XMLStreamException e) {
 	    e.printStackTrace();
-	} finally {
+	} 
+	finally {
 	    if (xmlReader != null)
 		try {
 		    xmlReader.close();

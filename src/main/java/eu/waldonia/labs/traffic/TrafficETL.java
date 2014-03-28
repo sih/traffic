@@ -44,7 +44,8 @@ public class TrafficETL {
 	    jp.setReader(f.createXMLEventReader(connector.getAsStream(journeyUrl)));
 	    jp.process();
 	    
-	    connector.close();
+	    System.exit(0);
+	    
 	}
 	catch (Exception e) {
 	    // TODO Auto-generated catch block
