@@ -153,8 +153,7 @@ public class JourneyProcessor extends AbstractProcessor {
 	    }
 	    // stop the timer
 	    timer = System.currentTimeMillis() - timer;
-	    System.out.println("Processed " + counter + " locations in " + timer
-		    + " ms");
+	    //System.out.println("Processed " + counter + " locations in " + timer+ " ms");
 
 	}
 	catch (XMLStreamException e) {
